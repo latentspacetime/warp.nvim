@@ -2,6 +2,8 @@
 
 warp.nvim is a Neovim floating window that sends a prompt to high TPS provider/model combinations on OpenRouter such as diffusion LLMs running on LMUs and streams the reply in place.
 
+Warp is context-aware of files and will answer questions about what a file does in less than 1 second. 
+
 <img width="658" height="480" alt="demo-warp" src="https://github.com/user-attachments/assets/179eee09-2ffd-43c9-96b8-c05b8bf5c7cd" />
 
 
