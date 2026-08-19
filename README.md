@@ -1,6 +1,6 @@
 # warp.nvim
 
-This is not the Warp terminal. warp.nvim is a Neovim floating window that sends a prompt to OpenRouter and streams the reply in place.
+warp.nvim is a Neovim floating window that sends a prompt to high TPS provider/model combinations on OpenRouter such as diffusion LLMs running on LMUs and streams the reply in place.
 
 ![Warp demo](assets/demo.gif)
 
