@@ -4,7 +4,7 @@ warp.nvim is a Neovim floating window that sends a prompt to high TPS provider/m
 
 Warp is context-aware of files and will answer questions about what a file does in less than 1 second. 
 
-<img width="658" height="480" alt="demo-warp" src="https://github.com/user-attachments/assets/179eee09-2ffd-43c9-96b8-c05b8bf5c7cd" />
+<img width="1974" height="1440" alt="demo-warp_1" src="https://github.com/user-attachments/assets/91acea2e-f547-4f15-8d04-608526464d3d" />
 
 
 ## Requirements
