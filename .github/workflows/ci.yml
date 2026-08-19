@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install zsh, curl, and ripgrep
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zsh curl ripgrep
+
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.10.4
+
+      - name: Leak gate
+        run: ./scripts/check.zsh
+
+      - name: Headless tests
+        run: |
+          env -u NVIM nvim --headless -u NONE \
+            -c "set rtp+=." \
+            -c "lua vim.g.mapleader = ' '" \
+            -c "lua require('warp').setup()" \
+            -c "luafile tests/warp_test.lua"

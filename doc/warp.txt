@@ -1,0 +1,142 @@
+*warp.txt*	Neovim OpenRouter query float
+
+This is not the Warp terminal.
+
+==============================================================================
+CONTENTS							*warp-contents*
+
+1. Introduction			|warp-introduction|
+2. Requirements			|warp-requirements|
+3. Setup			|warp-setup|
+4. API key			|warp-api-key|
+5. Keys				|warp-keys|
+6. Models			|warp-models|
+7. File context			|warp-file-context|
+8. Commands			|warp-commands|
+9. Limitations			|warp-limitations|
+
+==============================================================================
+1. Introduction						*warp-introduction*
+
+warp.nvim opens a floating window, sends the prompt to OpenRouter, and
+streams the reply in the same window. `require("warp").setup()` is the only
+configuration door.
+
+==============================================================================
+2. Requirements						*warp-requirements*
+
+- Neovim 0.10 or newer
+- curl on PATH
+- An OpenRouter account
+
+`:TSInstall markdown` is optional and only affects highlighting inside the
+float.
+
+==============================================================================
+3. Setup							*warp-setup*
+
+>
+	require("warp").setup({
+	  keys = { "<Leader>w", "<Leader>W" },
+	  secrets_file = nil,
+	  models = nil,
+	  system_prompt = nil,
+	  max_context_lines = 500,
+	  max_context_bytes = 65536,
+	})
+<
+
+`keys` defaults to `<Leader>w` and `<Leader>W`. Pass `nil` to skip mapping.
+`secrets_file` defaults to `stdpath("data")/warp.env` when unset or empty.
+`models` and `system_prompt` keep the built-in defaults when nil.
+
+lazy.nvim: >
+
+	{
+	  "latentspacetime/warp.nvim",
+	  keys = { "<Leader>w" },
+	  config = function()
+	    require("warp").setup()
+	  end,
+	}
+<
+
+==============================================================================
+4. API key							*warp-api-key*
+
+Submit refuses when no key is available.
+
+1. Press `<Leader>w` to open the float.
+2. Press `m`, then `a`.
+3. Press `e`, paste the key, and press Enter.
+
+Warp writes `export OPENROUTER_API_KEY=` to the configured secrets file with
+mode 600 and sets the environment variable for the current session. Later
+launches load that file when the environment variable is empty.
+
+Setting `OPENROUTER_API_KEY` in the process environment also works. Warp
+reads it first.
+
+==============================================================================
+5. Keys								*warp-keys*
+
+The float installs these mappings on its buffer. `<Leader>w` / `<Leader>W`
+are created by |warp-setup|.
+
+    `<Leader>w` / `<Leader>W`  Open or close (normal)
+    Enter                      Submit (insert or normal)
+    Tab or s                   Cycle RAPID to ADVANCED (normal)
+    Scroll wheel               Browse the transcript (insert or normal)
+    i a I A o O                Jump to the input box (normal)
+    m                          Menu: (c)opy, (e)xplain, (a)pi (normal)
+    m then c                   Copy the last response
+    m then e                   Explain the attached file and submit
+    m then a, then e           Enter or replace the OpenRouter key
+    b or 1-9                   Copy fenced block N (after a reply)
+    click [copy N]             Copy that block
+    drag-select, release       Copy the highlighted text
+    y                          Copy the highlighted text (visual)
+    Esc                        Close and cancel curl
+
+Insert-mode Tab stays a real tab.
+
+==============================================================================
+6. Models							*warp-models*
+
+    RAPID      openai/gpt-oss-120b (default)
+               provider.only = { "cerebras/fp16" }, allow_fallbacks = false
+    ADVANCED   openai/gpt-5.6-luna, reasoning.effort = medium
+    MERCURY    inception/mercury-2, enabled = false
+
+Tab and s skip Mercury. A thrown RAPID or ADVANCED request retries once on
+Mercury.
+
+==============================================================================
+7. File context						*warp-file-context*
+
+Opening Warp from a named file buffer (empty 'buftype', a non-empty path, no
+NUL bytes) snapshots that buffer, capped at 500 lines and 64 KiB. Submit
+adds a second system message with path, filetype, and a fenced copy of the
+text. A terminal or scratch buffer attaches nothing.
+
+==============================================================================
+8. Commands							*warp-commands*
+
+:Warp								*:Warp*
+    Open the float.
+
+:WarpLog							*:WarpLog*
+    Open `stdpath("data")/warp.log` in a new tab.
+
+==============================================================================
+9. Limitations						*warp-limitations*
+
+- OpenRouter only in v1. Other providers are a later `setup` option.
+- Requires Neovim 0.10 and `curl`.
+- Streaming is a curl job, not the OpenAI Lua SDK.
+- Default models, the Cerebras fp16 pin, and prices change when OpenRouter
+  changes them.
+- File context is the buffer at open time, capped, and only from a named file.
+- This is not the Warp terminal.
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
