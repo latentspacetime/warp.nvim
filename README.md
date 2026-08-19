@@ -29,6 +29,10 @@ Add this block to your lazy.nvim spec, then restart Neovim:
 
 `setup()` creates `<Leader>w` and `<Leader>W`. Pass `keys = nil` if you want to map the open command yourself. `:Warp` also opens the float.
 
+<img width="1288" height="612" alt="img" src="https://github.com/user-attachments/assets/0bdeb2ba-f562-4d4e-9c3c-f8e427862e35" />
+
+Warp features "Advanced" mode by hitting TAB in normal mode, allowing for a more accurate response for slightly longer latency. 
+
 ## API key
 
 Submit refuses to run until an OpenRouter key is available. Use one of these two paths.
